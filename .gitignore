@@ -1,0 +1,14 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+chroma_db/
+data/audio_cache/
+*.ogg
+*.mp3
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
