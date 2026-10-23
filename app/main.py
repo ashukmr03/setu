@@ -59,13 +59,10 @@ async def verify_meta_webhook(request: Request):
 # ── Incoming webhook POST ──────────────────────────────────────────────────────
 @app.post("/webhook")
 async def receive_message(request: Request):
-    """
-    Handles incoming Twilio WhatsApp messages (form-encoded).
-    Switch comment blocks below to use Meta JSON instead.
-    """
-    # ── TWILIO (active) ────────────────────────────────────────────────────────
     raw_body = await request.body()
     content_type = request.headers.get("content-type", "")
+    logger.info("POST /webhook received. content-type=%s body_len=%d", content_type, len(raw_body))
+    logger.info("Headers: %s", dict(request.headers))
 
     # Twilio signature verification
     url = str(request.url)
