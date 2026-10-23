@@ -14,7 +14,11 @@ import os
 
 import httpx
 from elevenlabs.client import ElevenLabs
-from pydub import AudioSegment
+try:
+    from pydub import AudioSegment
+    PYDUB_AVAILABLE = True
+except ImportError:
+    PYDUB_AVAILABLE = False
 
 from app.config import config
 
@@ -90,7 +94,11 @@ def synthesise_speech(text: str, language: str = "en") -> bytes:
 
 
 def _mp3_to_ogg_opus(mp3_bytes: bytes) -> bytes:
-    """Convert MP3 bytes to OGG OPUS using pydub."""
+    """Convert MP3 bytes to OGG OPUS. Falls back to returning mp3 if pydub unavailable."""
+    if not PYDUB_AVAILABLE:
+        logger.warning("pydub not available — sending MP3 directly.")
+        return mp3_bytes
+
     with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tmp_mp3:
         tmp_mp3.write(mp3_bytes)
         tmp_mp3_path = tmp_mp3.name
